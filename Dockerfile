@@ -1,48 +1,42 @@
+# Базовый образ с Python
 FROM python:3.12-slim
 
-# Обновление пакетов и установка необходимых библиотек
+# Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
-    chromium \
-    chromium-driver \
     wget \
+    curl \
     unzip \
     gnupg \
-    curl \
     libglib2.0-0 \
     libnss3 \
     libgconf-2-4 \
     libfontconfig1 \
-    libx11-xcb1 \
+    libxss1 \
+    libasound2 \
+    libxshmfence1 \
+    libxi6 \
+    libxcursor1 \
     libxcomposite1 \
-    libxdamage1 \
     libxrandr2 \
     libgtk-3-0 \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libcups2 \
-    libdbus-1-3 \
-    libdrm2 \
-    libgbm1 \
-    libnspr4 \
-    libxss1 \
-    libxtst6 \
+    ca-certificates \
     fonts-liberation \
-    && rm -rf /var/lib/apt/lists/*
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
-# Установка переменных окружения для Chrome
-ENV CHROME_BIN=/usr/bin/chromium
-ENV PATH=$PATH:/usr/bin/chromium
+# Установка Google Chrome
+RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
 # Установка зависимостей Python
+COPY requirements.txt /app/requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements.txt
+
+# Копирование проекта
+COPY . /app
 WORKDIR /app
-COPY requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Копируем код
-COPY . .
-
-# Команда запуска
+# Точка входа
 CMD ["python", "main.py"]

@@ -66,9 +66,8 @@ def parse_projects_from_page(page, seen_links):
                     date_element = container.find_element(By.CSS_SELECTOR, "span.created-date")
                     raw_date_text = date_element.text.strip().replace("eingetragen am:", "").strip()
 
-                    # Преобразуем "19.05.2025 / 12:20" → "2025-05-19 12:20"
-                    parsed_date = datetime.strptime(raw_date_text, "%d.%m.%Y / %H:%M")
-                    date_text = parsed_date.strftime("%Y-%m-%d %H:%M")
+                    # parsed_date = datetime.strptime(raw_date_text, "%d.%m.%Y / %H:%M")
+                    # date_text = parsed_date.strftime("%Y-%m-%d %H:%M")
                 except:
                     date_text = "Unbekannt"
 

@@ -1,2 +1,0 @@
-[phases.setup]
-aptPkgs = ["chromium", "chromium-driver", "libnss3", "libgconf-2-4", "libxi6", "libxcursor1", "libxrandr2", "libxss1", "libxtst6", "libappindicator1", "libasound2"]

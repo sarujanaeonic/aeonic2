@@ -105,7 +105,15 @@ driver.quit()
 with open("freelancermap_projects.json", "w", encoding="utf-8") as f:
     json.dump(all_projects, f, ensure_ascii=False, indent=2)
 
-print(f"✅ Einzigartige Projekte gespeichert: {len(all_projects)}.")
+import requests
 
-
-
+webhook_url = "https://saru2025.app.n8n.cloud/webhook-test/railway"
+try:
+    response = requests.post(
+        webhook_url,
+        json=all_projects,
+        headers={"Content-Type": "application/json"}
+    )
+    print("📡 JSON gesendet an n8n:", response.status_code)
+except Exception as e:
+    print("❌ Fehler beim senden n8n:", str(e))

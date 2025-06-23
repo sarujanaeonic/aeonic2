@@ -107,6 +107,7 @@ with open("freelancermap_projects.json", "w", encoding="utf-8") as f:
 import requests
 
 webhook_url = "https://saru2025.app.n8n.cloud/webhook/1e1733e4-95b1-4e04-bd90-d24be4e21404"
+webhook_url = "https://saru2025.app.n8n.cloud/webhook/e726339e-795a-45cf-9cb8-e6f25d83c2b3"
 try:
     response = requests.post(
         webhook_url,

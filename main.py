@@ -126,7 +126,7 @@ with open("queries.txt", "r", encoding="utf-8") as f:
     keywords = f.readlines()
 
 # 🌐 Webhook
-webhook_url = "https://saru2025.app.n8n.cloud/webhook/1e1733e4-95b1-4e04-bd90-d24be4e21404"
+webhook_url = "https://saru2025.app.n8n.cloud/webhook/fm-keywords-test"
 
 # 🔁 Keywords LOOP
 for kw in keywords:

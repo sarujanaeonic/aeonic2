@@ -32,9 +32,9 @@ def login(driver, username, password):
     WebDriverWait(driver, 10).until(EC.url_changes(login_url))
     print("✅ Anmeldung erfolgreich.")
 
-def parse_projects_from_page(driver, page, seen_links, keyword):
-    url = f"https://www.freelancermap.de/projektboerse.html?query={keyword}&countries%5B%5D=1&sort=2&pagenr={page}"
-    print(f"🔄 Lade Seite {page} für '{keyword}' ...")
+def parse_projects_from_page(driver, page, seen_links, keyword_for_url, keyword_for_field):
+    url = f"https://www.freelancermap.de/projektboerse.html?query={keyword_for_url}&countries%5B%5D=1&sort=2&pagenr={page}"
+    print(f"🔄 Lade Seite {page} für '{keyword_for_field}' ...")
     driver.get(url)
 
     try:
@@ -67,7 +67,8 @@ def parse_projects_from_page(driver, page, seen_links, keyword):
                 projects.append({
                     "title": title,
                     "link": link,
-                    "date": date_text
+                    "date": date_text,
+                    "keywords": keyword_for_field
                 })
                 seen_links.add(link)
         except:
@@ -102,7 +103,7 @@ def run_for_keyword(keyword_raw, webhook_url):
     MAX_PAGES = 10
 
     for i in range(1, MAX_PAGES + 1):
-        projects = parse_projects_from_page(driver, i, seen_links, keyword_for_url)
+        projects = parse_projects_from_page(driver, i, seen_links, keyword_for_url, keyword)
         if not projects:
             print("⛔️ Keine neuen Projekte mehr gefunden.")
             break
@@ -125,7 +126,7 @@ with open("queries.txt", "r", encoding="utf-8") as f:
     keywords = f.readlines()
 
 # 🌐 Webhook
-webhook_url = "https://saru2025.app.n8n.cloud/webhook/fm-keywords-test"
+webhook_url = "https://saru2025.app.n8n.cloud/webhook/1e1733e4-95b1-4e04-bd90-d24be4e21404"
 
 # 🔁 Keywords LOOP
 for kw in keywords:

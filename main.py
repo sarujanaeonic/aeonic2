@@ -126,7 +126,7 @@ with open("queries.txt", "r", encoding="utf-8") as f:
     keywords = f.readlines()
 
 # 🌐 Webhook
-webhook_url = "https://saru2025.app.n8n.cloud/webhook/dynamo-profiles"
+webhook_url = "https://saru2025.app.n8n.cloud/webhook/dynamo-prof-prod"
 
 # 🔁 Keywords LOOP
 for kw in keywords:

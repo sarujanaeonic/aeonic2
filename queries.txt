@@ -1,4 +1,2 @@
-SAP+ILM
 SAP+BW
-ABAP
 Databricks

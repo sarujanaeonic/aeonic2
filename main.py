@@ -137,4 +137,4 @@ for i, kw in enumerate(keywords):
 
     if i < len(keywords) - 1:
         print("⏳ Warte 10 Minuten bis zum nächsten Keyword ...")
-        time.sleep(600)  # 10 min
+        time.sleep(1800)  # 10 min

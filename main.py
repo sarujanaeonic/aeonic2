@@ -129,5 +129,12 @@ with open("queries.txt", "r", encoding="utf-8") as f:
 webhook_url = "https://saru2025.app.n8n.cloud/webhook/dynamo-prof-prod"
 
 # 🔁 Keywords LOOP
-for kw in keywords:
+#for kw in keywords:
+#    run_for_keyword(kw, webhook_url)
+
+for i, kw in enumerate(keywords):
     run_for_keyword(kw, webhook_url)
+
+    if i < len(keywords) - 1:
+        print("⏳ Warte 10 Minuten bis zum nächsten Keyword ...")
+        time.sleep(600)  # 10 min

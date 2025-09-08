@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     libglib2.0-0 \
     libnss3 \
-    libgconf-2-4 \
+    libgconf-2-dev \
     libfontconfig1 \
     libxss1 \
     libasound2 \

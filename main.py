@@ -9,7 +9,6 @@ import requests
 import json
 import time
 
-# Настройка драйвера
 def setup_driver():
     chrome_options = Options()
     chrome_options.add_argument("--headless")

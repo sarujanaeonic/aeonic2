@@ -23,12 +23,36 @@ def login(driver, username, password):
     login_url = "https://www.freelancermap.de/login"
     driver.get(login_url)
     print("🔐 Anmeldung ...")
-
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "login")))
-    driver.find_element(By.NAME, "login").send_keys(username)
-    driver.find_element(By.NAME, "password").send_keys(password)
-    driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-    WebDriverWait(driver, 10).until(EC.url_changes(login_url))
+    
+    user_el = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.NAME, "login"))
+    )
+    pass_el = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.NAME, "password"))
+    )
+    user_el.clear(); user_el.send_keys(username)
+    pass_el.clear(); pass_el.send_keys(password)
+    try:
+        submit_btn = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, "button[data-id='login-submit-button'], button[data-testid='next-button']")
+            )
+        )
+        try:
+            submit_btn.click()
+        except (ElementClickInterceptedException, ElementNotInteractableException):
+            driver.execute_script("arguments[0].click();", submit_btn)
+    except TimeoutException:
+        pass_el.send_keys(Keys.ENTER)
+    try:
+        WebDriverWait(driver, 12).until(
+            lambda d: d.current_url != login_url
+                      or not d.find_elements(By.NAME, "password")
+        )
+    except TimeoutException:
+        err_elems = driver.find_elements(By.CSS_SELECTOR, ".alert-danger, .alert--error, [role='alert']")
+        if err_elems:
+            raise TimeoutException(f"Логин отклонён сайтом: {err_elems[0].text.strip()}")
     print("✅ Anmeldung erfolgreich.")
 
 def parse_projects_from_page(driver, page, seen_links, keyword_for_url, keyword_for_field):

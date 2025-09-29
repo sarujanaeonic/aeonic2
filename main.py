@@ -61,43 +61,63 @@ def parse_projects_from_page(driver, page, seen_links, keyword_for_url, keyword_
     driver.get(url)
 
     try:
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'a[href*="/projekt/"]'))
+        WebDriverWait(driver, 12).until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.project-card"))
         )
     except:
         print("❌ Keine Projekte gefunden.")
         return []
 
-    items = driver.find_elements(By.CSS_SELECTOR, 'a[href*="/projekt/"]')
-    print(f"✅ {len(items)} Projekte gefunden.")
+    cards = driver.find_elements(By.CSS_SELECTOR, "div.project-card")
+    print(f"✅ {len(cards)} Projekte gefunden.")
     projects = []
 
-    for item in items:
+    for card in cards:
         try:
-            title = item.text.strip()
-            link = item.get_attribute("href")
+            a = card.find_element(By.CSS_SELECTOR, "a[href*='/projekt/']")
+            title = a.text.strip()
+            link = a.get_attribute("href")
 
-            if title and link and link.startswith("https://www.freelancermap.de/projekt/") and link not in seen_links:
-                try:
-                    container = item.find_element(By.XPATH, "./ancestor::div[contains(@class, 'project-container')]")
-                    date_element = container.find_element(By.CSS_SELECTOR, "span.created-date")
-                    raw_date_text = date_element.text.strip().replace("eingetragen am:", "").strip()
-                    parsed_date = datetime.strptime(raw_date_text, "%d.%m.%Y / %H:%M")
-                    date_text = parsed_date.strftime("%Y-%m-%d %H:%M")
-                except:
-                    date_text = "Unbekannt"
+            if not title or not link or link in seen_links:
+                continue
 
-                projects.append({
-                    "title": title,
-                    "link": link,
-                    "date": date_text,
-                    "keywords": keyword_for_field
-                })
-                seen_links.add(link)
-        except:
+            date_text = "Unbekannt"
+            try:
+                date_el = card.find_element(By.CSS_SELECTOR, "span[data-testid='created'], .project-created span")
+                raw = date_el.text.strip()
+                parsed = None
+                for fmt in ("%d.%m.%Y / %H:%M", "%d.%m.%Y"):
+                    try:
+                        parsed = datetime.strptime(raw, fmt)
+                        break
+                    except ValueError:
+                        continue
+                if parsed:
+                    if parsed.hour == 0 and parsed.minute == 0 and "/" not in raw:
+                        date_text = parsed.strftime("%Y-%m-%d")
+                    else:
+                        date_text = parsed.strftime("%Y-%m-%d %H:%M")
+                else:
+                    if raw.lower().strip() in {"ab sofort", "sofort"}:
+                        date_text = "ab sofort"
+                    else:
+                        date_text = raw
+            except Exception:
+                pass  
+
+            projects.append({
+                "title": title,
+                "link": link,
+                "date": date_text,
+                "keywords": keyword_for_field
+            })
+            seen_links.add(link)
+
+        except Exception:
             continue
 
     return projects
+
 
 def send_to_webhook(projects, keyword, webhook_url):
     try:

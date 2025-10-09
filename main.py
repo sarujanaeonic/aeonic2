@@ -4,10 +4,17 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import (
+    TimeoutException,
+    ElementClickInterceptedException,
+    ElementNotInteractableException,
+)
+from selenium.webdriver.common.keys import Keys
 from datetime import datetime
 import requests
 import json
 import time
+
 
 def setup_driver():
     chrome_options = Options()

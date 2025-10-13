@@ -168,7 +168,7 @@ def run_for_keyword(keyword_raw, webhook_url):
         print(f"⚠️ Keine Projekte gefunden für '{keyword}'.")
 
 # 🔐 Zugangsdaten
-USERNAME = "in.alen.kairat@gmail.com"
+USERNAME = "alen.kairat@aeonic-intelligence.de"
 PASSWORD = "Sommer2025++"
 
 # 📄 Keywords lesen

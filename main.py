@@ -169,7 +169,7 @@ def run_for_keyword(keyword_raw, webhook_url):
 
 # 🔐 Zugangsdaten
 USERNAME = "alen.kairat@aeonic-intelligence.de"
-PASSWORD = "Sommer2025++"
+PASSWORD = "Winter2026+-"
 
 # 📄 Keywords lesen
 with open("queries.txt", "r", encoding="utf-8") as f:
